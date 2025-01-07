@@ -1,11 +1,12 @@
 <main class="app-wrapper">
+  <h1>Enter the number of strategies</h1>
   <app-dimension-input
     [(value)]="rows"
-    label="Enter the number of strategies of the first player"
+    label="First player"
   ></app-dimension-input>
   <app-dimension-input
     [(value)]="columns"
-    label="Enter the number of strategies of the second player"
+    label="Second player"
   ></app-dimension-input>
 
   @if(rows && columns){
@@ -13,7 +14,12 @@
   }
 
   <h1>Calculate result</h1>
-  <button (click)="getResult()">Calculate</button>
+  <button
+    class="app-button"
+    mat-flat-button
+    color="primary"
+    (click)="getResult()"
+  >
+    Calculate
+  </button>
 </main>
-
-<router-outlet />

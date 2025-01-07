@@ -1,13 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { MatrixTableComponent } from './common-ui/matrix-table/matrix-table.component';
 import { DimensionInputComponent } from './common-ui/dimension-input/dimension-input.component';
 import { MatrixCalculatorService } from './data/services/matrix-calculator.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, MatrixTableComponent, DimensionInputComponent],
+  imports: [MatrixTableComponent, DimensionInputComponent, MatButtonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

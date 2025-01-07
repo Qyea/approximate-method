@@ -1,6 +1,17 @@
 <div>
-  <label>
+  <form class="example-form">
+    <mat-form-field class="example-full-width">
+      <mat-label> {{ label }}</mat-label>
+      <input
+        matInput
+        type="number"
+        [value]="value"
+        (input)="onInputChange($event)"
+      />
+    </mat-form-field>
+  </form>
+  <!-- <label>
     {{ label }}
     <input type="text" [value]="value" (input)="onInputChange($event)" />
-  </label>
+  </label> -->
 </div>
