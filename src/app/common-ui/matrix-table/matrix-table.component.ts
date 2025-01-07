@@ -6,8 +6,6 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgModule } from '@angular/core';
-
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 
@@ -31,13 +29,12 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrl: './matrix-table.component.scss',
 })
 export class MatrixTableComponent {
-  @Input() matrix: number[][] = [];
+  @Input() matrix: (number | null)[][] = [];
   @Input() rows: number = 0;
   @Input() columns: number = 0;
 
   displayedColumns: string[] = [];
-
-  dataSource = ELEMENT_DATA;
+  tempMatrix: (number | null)[][] = [];
 
   getRows(): number[] {
     return Array.from({ length: this.rows }, (_, i) => i);
@@ -54,15 +51,17 @@ export class MatrixTableComponent {
   }
 
   initializeMatrix() {
+    this.tempMatrix = this.matrix.map((row) => [...row]);
+
     this.matrix = Array.from({ length: this.rows }, () =>
       Array(this.columns).fill(0)
     );
 
-    for (let i = 0; i < this.rows; i++) {
-      for (let j = 0; j < this.columns; j++) {
-        this.matrix[i][j] = 0;
+    this.tempMatrix.forEach((row, i) => {
+      for (let j = 0; j < Math.min(this.columns, row.length); j++) {
+        this.matrix[i][j] = row[j];
       }
-    }
+    });
 
     this.displayedColumns = this.getColumns().map((_, index) => 'col' + index);
   }
