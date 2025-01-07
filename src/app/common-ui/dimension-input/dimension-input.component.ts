@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -10,5 +10,13 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './dimension-input.component.scss',
 })
 export class DimensionInputComponent {
-  title: string = 'hello';
+  @Input() label: string = '';
+  @Input() value: number | null = null;
+  @Output() valueChange = new EventEmitter<string>();
+  onInputChange(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const newValue = inputElement.value;
+    this.value = Number(newValue);
+    this.valueChange.emit(newValue);
+  }
 }

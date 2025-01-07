@@ -1,1 +1,10 @@
-<p>matrix-table works!</p>
+<h2>Enter clean player strategies</h2>
+<table border="1">
+  @for (row of getRows(); track $index) {
+  <tr>
+    @for (column of getColumns(); track $index) {
+    <td><input [value]="matrix" /></td>
+    }
+  </tr>
+  }
+</table>

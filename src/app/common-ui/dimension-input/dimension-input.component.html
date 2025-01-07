@@ -1,4 +1,6 @@
 <div>
-  <label>Название модели</label>
-  <input class="form-control" name="title" [(ngModel)]="title" />
+  <label>
+    {{ label }}
+    <input type="text" [value]="value" (input)="onInputChange($event)" />
+  </label>
 </div>
