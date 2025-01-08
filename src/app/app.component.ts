@@ -13,8 +13,11 @@ import { MatButtonModule } from '@angular/material/button';
 export class AppComponent {
   title = 'approximate-method';
   rows: number | null = null;
-
   columns: number | null = null;
+
+  firstStrategy: number = 0;
+  steps: number = 0;
+
   hasResult: boolean = false;
 
   matrixCalculatorService = inject(MatrixCalculatorService);
@@ -23,8 +26,13 @@ export class AppComponent {
     const n = Number(this.rows);
     const m = Number(this.columns);
 
+    const firstStrategy = Number(this.firstStrategy);
+    const steps = Number(this.steps);
+
     if (n && m) {
-      console.log(this.matrixCalculatorService.calculateResult(n, m));
+      console.log(
+        this.matrixCalculatorService.calculateResult(n, m, firstStrategy, steps)
+      );
     } else {
       alert('Enter proper inputs');
     }

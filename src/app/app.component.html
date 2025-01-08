@@ -11,6 +11,11 @@
 
   @if(rows && columns){
   <app-matrix-table [columns]="columns" [rows]="rows" />
+  <app-dimension-input
+    [(value)]="firstStrategy"
+    label="First Strategy"
+  ></app-dimension-input>
+  <app-dimension-input [(value)]="steps" label="Steps"></app-dimension-input>
   }
 
   <h1>Calculate result</h1>

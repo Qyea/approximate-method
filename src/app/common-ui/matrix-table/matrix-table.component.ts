@@ -1,6 +1,7 @@
 import {
   Component,
   EventEmitter,
+  inject,
   Input,
   Output,
   SimpleChanges,
@@ -8,6 +9,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
+import { MatrixCalculatorService } from '../../data/services/matrix-calculator.service';
 
 export interface PeriodicElement {
   name: string;
@@ -29,10 +31,13 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrl: './matrix-table.component.scss',
 })
 export class MatrixTableComponent {
-  @Input() matrix: (number | null)[][] = [];
+  // @Input() matrix: (number | null)[][] = [];
   @Input() rows: number = 0;
   @Input() columns: number = 0;
 
+  matrixCalculatorService = inject(MatrixCalculatorService);
+
+  matrix = this.matrixCalculatorService.matrix;
   displayedColumns: string[] = [];
   tempMatrix: (number | null)[][] = [];
 
@@ -51,17 +56,21 @@ export class MatrixTableComponent {
   }
 
   initializeMatrix() {
-    this.tempMatrix = this.matrix.map((row) => [...row]);
+    this.tempMatrix = this.matrix().map((row) => [...row]);
 
-    this.matrix = Array.from({ length: this.rows }, () =>
+    const newMatrix = Array.from({ length: this.rows }, () =>
       Array(this.columns).fill(0)
     );
 
+    // Копируем данные из tempMatrix в новую матрицу
     this.tempMatrix.forEach((row, i) => {
       for (let j = 0; j < Math.min(this.columns, row.length); j++) {
-        this.matrix[i][j] = row[j];
+        newMatrix[i][j] = row[j];
       }
     });
+
+    // Обновляем матрицу в сервисе
+    this.matrixCalculatorService.setMatrix(newMatrix);
 
     this.displayedColumns = this.getColumns().map((_, index) => 'col' + index);
   }
