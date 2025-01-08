@@ -31,7 +31,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrl: './matrix-table.component.scss',
 })
 export class MatrixTableComponent {
-  // @Input() matrix: (number | null)[][] = [];
   @Input() rows: number = 0;
   @Input() columns: number = 0;
 
@@ -62,14 +61,12 @@ export class MatrixTableComponent {
       Array(this.columns).fill(0)
     );
 
-    // Копируем данные из tempMatrix в новую матрицу
     this.tempMatrix.forEach((row, i) => {
       for (let j = 0; j < Math.min(this.columns, row.length); j++) {
         newMatrix[i][j] = row[j];
       }
     });
 
-    // Обновляем матрицу в сервисе
     this.matrixCalculatorService.setMatrix(newMatrix);
 
     this.displayedColumns = this.getColumns().map((_, index) => 'col' + index);

@@ -1,5 +1,5 @@
 <div>
-  <h2>Enter clean player strategies</h2>
+  <h2>Enter payoff matrix</h2>
   <table mat-table [dataSource]="matrix()" class="mat-elevation-z8">
     @for (column of getColumns(); track $index; let colIndex = $index) {
     <ng-container matColumnDef="col{{ colIndex }}">

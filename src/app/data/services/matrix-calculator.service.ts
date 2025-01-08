@@ -1,106 +1,54 @@
 import { Injectable, signal } from '@angular/core';
-
-interface OptimalStrategy {
-  firstPlayerOptimalStrategyIndex: number;
-  secondPlayerOptimalStrategyIndex: number;
-  firstPlayerOptimalStrategy: number;
-  secondPlayerOptimalStrategy: number;
-  gamePrice: number;
-}
+import { OptimalGameRound } from '../interfaces/optimal-game-round';
+import { MatrixHelpers } from '../../helpers/matrix-helpers';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MatrixCalculatorService {
   matrix = signal<number[][]>([]);
+  matrixHelpers = new MatrixHelpers();
 
   setMatrix(newMatrix: number[][]): void {
     this.matrix.set(newMatrix);
   }
 
-  normalizeColumns(matrix: number[][], vector: number[]) {
-    return matrix.map((row) =>
-      row.map((value, colIndex) => value * vector[colIndex])
-    );
-  }
-  normalizeRows(matrix: number[][], vector: number[]) {
-    return matrix.map((row, rowIdex) =>
-      row.map((value) => value * vector[rowIdex])
-    );
-  }
-
-  getNormalizedMatrix(
-    matrix: number[][],
-    iteration: number,
-    probabilityVector: number[],
-    type: number
-  ) {
-    const total = probabilityVector.reduce((sum, prob) => sum + prob, 0);
-
-    const normalizedVector = probabilityVector.map(
-      (probability) => probability / total
-    );
-
-    let newMatrix: number[][] = [];
-
-    if (type === 0) {
-      newMatrix = this.normalizeRows(matrix, normalizedVector);
-    } else {
-      newMatrix = this.normalizeColumns(matrix, normalizedVector);
-    }
-
-    return newMatrix;
-  }
-
-  getMinimumStrategyByColumns(
+  findOptimalStrategy(
     matrix: number[][],
     probabilityVector: number[],
-    iteration: number
+    byRow: boolean
   ) {
-    const normalizedMatrix = this.getNormalizedMatrix(
+    const normalizedMatrix = this.matrixHelpers.getNormalizedMatrix(
       matrix,
-      iteration,
       probabilityVector,
-      0
+      byRow
     );
 
-    const strategies = Array.from(
-      { length: normalizedMatrix[0].length },
-      (_, colIndex) =>
-        normalizedMatrix.reduce((acc, row) => acc + (row[colIndex] ?? 0), 0)
-    );
+    const strategies = byRow
+      ? Array.from(
+          { length: normalizedMatrix[0].length },
+          (_, colIndex) =>
+            Math.round(
+              normalizedMatrix.reduce(
+                (acc, row) => acc + (row[colIndex] ?? 0),
+                0
+              ) * 100
+            ) / 100
+        )
+      : normalizedMatrix.map(
+          (row) =>
+            Math.round(row.reduce((acc, val) => acc + val, 0) * 100) / 100
+        );
 
-    console.log('matrix Columns: ', normalizedMatrix);
-    console.log('Columns: ', strategies);
+    let optimalValue = byRow
+      ? Math.min(...strategies)
+      : Math.max(...strategies);
 
-    const minIndex = strategies.lastIndexOf(Math.min(...strategies));
-    const minValue = strategies[minIndex];
+    optimalValue = Number(optimalValue.toFixed(2));
 
-    return { minValue, minIndex };
-  }
-  getMaximumStrategyByRows(
-    matrix: number[][],
-    probabilityVector: number[],
-    iteration: number
-  ) {
-    const normalizedMatrix = this.getNormalizedMatrix(
-      matrix,
-      iteration,
-      probabilityVector,
-      1
-    );
+    const optimalIndex = strategies.lastIndexOf(optimalValue);
 
-    const strategies = normalizedMatrix.map((row) =>
-      row.reduce((acc, val) => acc + val, 0)
-    );
-
-    console.log('matrix Rows: ', normalizedMatrix);
-    console.log('Rows: ', strategies);
-
-    const maxIndex = strategies.lastIndexOf(Math.max(...strategies));
-    const maxValue = strategies[maxIndex];
-
-    return { maxValue, maxIndex };
+    return { optimalValue, optimalIndex, strategies };
   }
 
   calculateResult(
@@ -108,7 +56,7 @@ export class MatrixCalculatorService {
     columns: number,
     firstStrategy: number,
     steps: number
-  ): number {
+  ): OptimalGameRound[] {
     const firstPlayerMixedStrategy: number[] = Array.from(
       { length: columns },
       () => 0
@@ -123,43 +71,47 @@ export class MatrixCalculatorService {
 
     firstPlayerMixedStrategy[optimalStrategyIndex] += 1;
 
-    const optimalStrategyArray: OptimalStrategy[] = [];
+    const optimalRounds: OptimalGameRound[] = [];
 
     for (let i = 0; i < steps; i++) {
       console.log(firstPlayerMixedStrategy);
-      const minimumStrategy = this.getMinimumStrategyByColumns(
+      const minimumStrategy = this.findOptimalStrategy(
         this.matrix(),
         firstPlayerMixedStrategy,
-        i + 1
+        true
       );
 
-      secondPlayerMixedStrategy[minimumStrategy.minIndex] += 1;
+      secondPlayerMixedStrategy[minimumStrategy.optimalIndex] += 1;
 
       console.log(secondPlayerMixedStrategy);
 
-      const maximumStrategy = this.getMaximumStrategyByRows(
+      const maximumStrategy = this.findOptimalStrategy(
         this.matrix(),
         secondPlayerMixedStrategy,
-        i + 1
+        false
       );
 
-      const gameParty: OptimalStrategy = {
-        firstPlayerOptimalStrategyIndex: maximumStrategy.maxIndex,
-        secondPlayerOptimalStrategyIndex: minimumStrategy.minIndex,
-        firstPlayerOptimalStrategy: maximumStrategy.maxValue,
-        secondPlayerOptimalStrategy: minimumStrategy.minValue,
-        gamePrice: (maximumStrategy.maxValue + minimumStrategy.minValue) / 2,
+      const roundResult: OptimalGameRound = {
+        iteration: i + 1,
+        secondPlayerOptimalStrategyIndex: minimumStrategy.optimalIndex,
+        secondPlayerOptimalStrategy: minimumStrategy.optimalValue,
+        firstPlayerOptimalStrategies: minimumStrategy.strategies,
+        firstPlayerOptimalStrategyIndex: optimalStrategyIndex,
+        firstPlayerOptimalStrategy: maximumStrategy.optimalValue,
+        secondPlayerOptimalStrategies: maximumStrategy.strategies,
+        gamePrice:
+          (maximumStrategy.optimalValue + minimumStrategy.optimalValue) / 2,
       };
 
-      optimalStrategyArray.push(gameParty);
+      optimalRounds.push(roundResult);
 
-      firstPlayerMixedStrategy[maximumStrategy.maxIndex] += 1;
+      firstPlayerMixedStrategy[maximumStrategy.optimalIndex] += 1;
 
-      optimalStrategyIndex = maximumStrategy.maxIndex;
+      optimalStrategyIndex = maximumStrategy.optimalIndex;
     }
 
-    console.log(optimalStrategyArray);
+    console.log(optimalRounds);
 
-    return columns + rows;
+    return optimalRounds;
   }
 }

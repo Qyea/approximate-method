@@ -16,8 +16,10 @@
     label="First Strategy"
   ></app-dimension-input>
   <app-dimension-input [(value)]="steps" label="Steps"></app-dimension-input>
-  }
 
+  } @if(hasResult){
+  <app-iteration-matrix [data]="dataSource"></app-iteration-matrix>
+  }@else{
   <h1>Calculate result</h1>
   <button
     class="app-button"
@@ -27,4 +29,5 @@
   >
     Calculate
   </button>
+  }
 </main>
