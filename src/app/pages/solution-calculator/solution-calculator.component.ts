@@ -44,6 +44,18 @@ export class SolutionCalculatorComponent {
     this.dialog.open(AlertDialogComponent);
   }
 
+  restartApplication() {
+    this.rows = null;
+    this.columns = null;
+
+    this.firstStrategy = 0;
+    this.steps = 0;
+
+    this.hasResult = false;
+
+    this.matrixCalculatorService.resetMatrix();
+  }
+
   getResult() {
     const n = Number(this.rows);
     const m = Number(this.columns);

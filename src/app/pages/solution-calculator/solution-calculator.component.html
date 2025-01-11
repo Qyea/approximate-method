@@ -22,15 +22,14 @@
 
   } @if(hasResult){
   <app-iteration-matrix [data]="dataSource"></app-iteration-matrix>
-  }@else{
-  <h1>Calculate result</h1>
+  }
   <button
     class="app-button"
     mat-flat-button
     color="primary"
-    (click)="getResult()"
+    [disabled]="!firstStrategy || !steps"
+    (click)="hasResult ? restartApplication() : getResult()"
   >
-    Calculate
+    {{ hasResult ? "Restart" : "Calculate" }}
   </button>
-  }
 </main>

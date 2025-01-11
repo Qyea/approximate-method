@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, inject, Input, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
@@ -17,11 +10,6 @@ export interface PeriodicElement {
   weight: number;
   symbol: string;
 }
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-];
 
 @Component({
   selector: 'app-matrix-table',
@@ -62,8 +50,10 @@ export class MatrixTableComponent {
     );
 
     this.tempMatrix.forEach((row, i) => {
-      for (let j = 0; j < Math.min(this.columns, row.length); j++) {
-        newMatrix[i][j] = row[j];
+      if (i < newMatrix.length) {
+        for (let j = 0; j < Math.min(this.columns, row.length); j++) {
+          newMatrix[i][j] = row[j];
+        }
       }
     });
 
