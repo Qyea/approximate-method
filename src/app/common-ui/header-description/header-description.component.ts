@@ -4,6 +4,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 
+import { gameDescription } from './../../data/text/gameDescription';
+import { gameInstruction } from './../../data/text/gameInstruction';
 @Component({
   selector: 'app-header-description',
   imports: [
@@ -15,4 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './header-description.component.html',
   styleUrl: './header-description.component.scss',
 })
-export class HeaderDescriptionComponent {}
+export class HeaderDescriptionComponent {
+  description: string = gameDescription;
+  instruction: string = gameInstruction;
+}

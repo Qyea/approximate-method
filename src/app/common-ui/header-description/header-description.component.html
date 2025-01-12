@@ -16,6 +16,7 @@
       and iteratively adjust them based on the observed outcomes and responses
       of other players.
     </p>
+    <div class="header-description" [innerHtml]="description"></div>
   </mat-expansion-panel>
   <mat-expansion-panel>
     <mat-expansion-panel-header>
@@ -24,15 +25,6 @@
         Instructions for the application
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <h4>Description</h4>
-    <p class="header-description">
-      The Iterative Method or Approximation Method in Game Theory is used to
-      find approximate solutions to complex games, especially when exact
-      solutions are computationally intensive or infeasible to determine
-      analytically. This method involves iteratively improving strategies based
-      on feedback and evaluating outcomes. Players start with initial strategies
-      and iteratively adjust them based on the observed outcomes and responses
-      of other players.
-    </p>
+    <div class="header-description" [innerHtml]="instruction"></div>
   </mat-expansion-panel>
 </mat-accordion>
