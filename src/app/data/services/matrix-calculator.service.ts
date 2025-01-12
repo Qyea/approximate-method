@@ -13,6 +13,10 @@ export class MatrixCalculatorService {
     this.matrix.set(newMatrix);
   }
 
+  resetMatrix(): void {
+    this.matrix.set([]);
+  }
+
   findOptimalStrategy(
     matrix: number[][],
     probabilityVector: number[],
@@ -83,8 +87,6 @@ export class MatrixCalculatorService {
 
       secondPlayerMixedStrategy[minimumStrategy.optimalIndex] += 1;
 
-      console.log(secondPlayerMixedStrategy);
-
       const maximumStrategy = this.findOptimalStrategy(
         this.matrix(),
         secondPlayerMixedStrategy,
@@ -109,8 +111,6 @@ export class MatrixCalculatorService {
 
       optimalStrategyIndex = maximumStrategy.optimalIndex;
     }
-
-    console.log(optimalRounds);
 
     return optimalRounds;
   }
