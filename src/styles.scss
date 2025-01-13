@@ -18,3 +18,15 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.matrix-wrapper {
+  margin: 1rem;
+}
+
+.matrix-row {
+  display: flex;
+}
+
+.matrix-row__cell {
+  margin-right: 1rem;
+}

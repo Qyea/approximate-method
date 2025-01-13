@@ -1,6 +1,8 @@
 import { Component, computed, Input, Signal } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
-import { OptimalGameRound } from '../../data/interfaces/optimal-game-round';
+
+import { OptimalGameRound } from '../../data/interfaces/optimal-game-round.interface';
+
 import { transformGameRoundToTableRow } from '../../helpers/table-helpers';
 
 @Component({

@@ -2,7 +2,10 @@ import { Component, inject, Input, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
+
 import { MatrixCalculatorService } from '../../data/services/matrix-calculator.service';
+
+import { DimensionInputComponent } from '../dimension-input/dimension-input.component';
 
 export interface PeriodicElement {
   name: string;
@@ -14,7 +17,12 @@ export interface PeriodicElement {
 @Component({
   selector: 'app-matrix-table',
   standalone: true,
-  imports: [MatTableModule, MatInputModule, FormsModule],
+  imports: [
+    MatTableModule,
+    MatInputModule,
+    FormsModule,
+    DimensionInputComponent,
+  ],
   templateUrl: './matrix-table.component.html',
   styleUrl: './matrix-table.component.scss',
 })

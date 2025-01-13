@@ -1,4 +1,4 @@
-import { OptimalGameRound } from '../data/interfaces/optimal-game-round';
+import { OptimalGameRound } from '../data/interfaces/optimal-game-round.interface';
 
 export function transformGameRoundToTableRow(
   gameRound: OptimalGameRound

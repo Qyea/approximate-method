@@ -5,14 +5,9 @@
     <ng-container matColumnDef="col{{ colIndex }}">
       <th mat-header-cell *matHeaderCellDef>A{{ colIndex + 1 }}</th>
       <td mat-cell *matCellDef="let element; let rowIndex = index">
-        <mat-form-field>
-          <input
-            matInput
-            type="number"
-            placeholder="Winnings"
-            [(ngModel)]="matrix()[rowIndex][colIndex]"
-          />
-        </mat-form-field>
+        <app-dimension-input
+          [(value)]="matrix()[rowIndex][colIndex]"
+        ></app-dimension-input>
       </td>
     </ng-container>
     }

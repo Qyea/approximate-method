@@ -4,14 +4,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDialog } from '@angular/material/dialog';
 
+import { LoggerService } from '../../data/services/logger.service';
+import { MatrixCalculatorService } from '../../data/services/matrix-calculator.service';
+
 import { AlertDialogComponent } from '../../common-ui/alert-dialog/alert-dialog.component';
 import { DimensionInputComponent } from '../../common-ui/dimension-input/dimension-input.component';
 import { IterationMatrixComponent } from '../../common-ui/iteration-matrix/iteration-matrix.component';
 import { MatrixTableComponent } from '../../common-ui/matrix-table/matrix-table.component';
+import { OptimalGameRound } from '../../data/interfaces/optimal-game-round.interface';
 
-import { MatrixCalculatorService } from '../../data/services/matrix-calculator.service';
-
-import { OptimalGameRound } from '../../data/interfaces/optimal-game-round';
 @Component({
   selector: 'app-solution-calculator',
   imports: [
@@ -25,54 +26,78 @@ import { OptimalGameRound } from '../../data/interfaces/optimal-game-round';
   styleUrl: './solution-calculator.component.scss',
 })
 export class SolutionCalculatorComponent {
-  matrixCalculatorService = inject(MatrixCalculatorService);
-  readonly dialog = inject(MatDialog);
-
-  dataSource: OptimalGameRound[] = [];
-
+  calculationResults: OptimalGameRound[] = [];
   title = 'approximate-method';
 
-  rows: number | null = null;
-  columns: number | null = null;
+  numberOfRows: number | null = null;
+  numberOfColumns: number | null = null;
+  startingStrategy: number = 0;
+  iterationSteps: number = 0;
 
-  firstStrategy: number = 0;
-  steps: number = 0;
+  isResultAvailable: boolean = false;
+  logMessages: string = '';
 
-  hasResult: boolean = false;
+  constructor(
+    private matrixCalculatorService: MatrixCalculatorService,
+    private loggerService: LoggerService,
+    private dialog: MatDialog
+  ) {}
 
-  openDialog() {
-    this.dialog.open(AlertDialogComponent);
+  private validateInputs(): boolean {
+    return !!this.numberOfRows && !!this.numberOfColumns;
   }
 
-  restartApplication() {
-    this.rows = null;
-    this.columns = null;
+  private openDialogWithConfig(
+    title: string,
+    message: string,
+    hasMath = false
+  ): void {
+    this.dialog.open(AlertDialogComponent, {
+      data: { title, message, hasMath },
+    });
+  }
 
-    this.firstStrategy = 0;
-    this.steps = 0;
+  openDialog(): void {
+    this.openDialogWithConfig(
+      'Incorrect values!',
+      'Please enter the correct number of clean strategies of the first and second player.'
+    );
+  }
+  openLogs(): void {
+    this.openDialogWithConfig('Logs', this.logMessages, true);
+  }
 
-    this.hasResult = false;
+  restartApplication(): void {
+    this.numberOfRows = null;
+    this.numberOfColumns = null;
+
+    this.startingStrategy = 0;
+    this.iterationSteps = 0;
+
+    this.isResultAvailable = false;
+    this.logMessages = '';
 
     this.matrixCalculatorService.resetMatrix();
   }
 
-  getResult() {
-    const n = Number(this.rows);
-    const m = Number(this.columns);
+  getResult(): void {
+    const n = Number(this.numberOfRows);
+    const m = Number(this.numberOfColumns);
 
-    const firstStrategy = Number(this.firstStrategy);
-    const steps = Number(this.steps);
+    const firstStrategy = Number(this.startingStrategy);
+    const steps = Number(this.iterationSteps);
 
-    if (n && m) {
-      const resultsData = this.matrixCalculatorService.calculateResult(
+    if (this.validateInputs()) {
+      const gameResultsTable = this.matrixCalculatorService.calculateResult(
         n,
         m,
         firstStrategy,
         steps
       );
 
-      this.dataSource = resultsData;
-      this.hasResult = true;
+      this.calculationResults = gameResultsTable;
+      this.isResultAvailable = true;
+      this.logMessages = this.loggerService.getLogs();
     } else {
       this.openDialog();
     }
