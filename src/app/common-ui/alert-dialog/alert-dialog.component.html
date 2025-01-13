@@ -1,8 +1,11 @@
-<h2 mat-dialog-title>Incorrect values!</h2>
-<mat-dialog-content
-  >Please enter the correct number of clean strategies of the first and second
-  player.</mat-dialog-content
->
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content>
+  @if(data.hasMath){
+  <mathjax [content]="data.message"></mathjax>
+  }@else {
+  {{ data.message }}
+  }
+</mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Close</button>
 </mat-dialog-actions>

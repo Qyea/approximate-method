@@ -10,11 +10,12 @@ export class LoggerService {
     matrix: number[][],
 
     isFirstPlayer: boolean
-  ) {
+  ): void {
     let log = ` 
     <div>
       <span>
-        Taking into account the probabilities of using strategies, we obtain the following matrix: \n ${matrix} \n
+        Taking into account the probabilities of using strategies, we obtain the following matrix: \n 
+        ${this.printMatrix(matrix)} \n
       </span> 
     </div>
     `;
@@ -54,7 +55,13 @@ export class LoggerService {
         }
       }
     } else {
-      log += `hhhh: \n`;
+      log += `
+        <div>
+          <span>
+            We calculate for each strategy (that is, we fix the row) the amount of the value in each column: 
+          </span> 
+        </div>
+      `;
 
       for (let j = 0; j < matrix[0].length; j++) {
         log += `
@@ -86,7 +93,7 @@ export class LoggerService {
     strategies: number[],
     optimalValue: number,
     isFirstPlayer: boolean
-  ) {
+  ): void {
     const playerNumber = isFirstPlayer ? 'first' : 'second';
 
     let log = `${isFirstPlayer ? '\n' : `Iteration: ${iteration + 1}\n`}`;
@@ -102,11 +109,25 @@ export class LoggerService {
     this.logs += log;
   }
 
+  printMatrix(matrix: number[][]): string {
+    let matrixBlock = '<div class="matrix-wrapper">';
+    for (let i = 0; i < matrix.length; i++) {
+      matrixBlock += '<div class="matrix-row">';
+      for (let j = 0; j < matrix[0].length; j++) {
+        matrixBlock += `<p class="matrix-row__cell">${matrix[i][j]}</p>`;
+      }
+      matrixBlock += '</div>';
+    }
+    matrixBlock += '</div>';
+
+    return matrixBlock;
+  }
+
   getLogs(): string {
     return this.logs;
   }
 
-  clearLogs() {
+  clearLogs(): void {
     this.logs = '';
   }
 }
