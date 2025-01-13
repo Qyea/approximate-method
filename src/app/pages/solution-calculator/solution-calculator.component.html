@@ -1,5 +1,6 @@
 <main class="app-wrapper">
   <h2>Enter the number of strategies</h2>
+
   <div class="app-inputs">
     <app-dimension-input
       [(value)]="rows"
@@ -22,7 +23,10 @@
 
   } @if(hasResult){
   <app-iteration-matrix [data]="dataSource"></app-iteration-matrix>
+
+  <mathjax [content]="this.loggerText"></mathjax>
   }
+
   <button
     class="app-button"
     mat-flat-button

@@ -4,14 +4,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDialog } from '@angular/material/dialog';
 
+import { LoggerService } from '../../data/services/logger.service';
+import { MatrixCalculatorService } from '../../data/services/matrix-calculator.service';
+
 import { AlertDialogComponent } from '../../common-ui/alert-dialog/alert-dialog.component';
 import { DimensionInputComponent } from '../../common-ui/dimension-input/dimension-input.component';
 import { IterationMatrixComponent } from '../../common-ui/iteration-matrix/iteration-matrix.component';
 import { MatrixTableComponent } from '../../common-ui/matrix-table/matrix-table.component';
 
-import { MatrixCalculatorService } from '../../data/services/matrix-calculator.service';
-
 import { OptimalGameRound } from '../../data/interfaces/optimal-game-round';
+import { MathjaxComponent } from '../../common-ui/mathjax/mathjax.component';
 @Component({
   selector: 'app-solution-calculator',
   imports: [
@@ -20,12 +22,14 @@ import { OptimalGameRound } from '../../data/interfaces/optimal-game-round';
     MatButtonModule,
     IterationMatrixComponent,
     MatGridListModule,
+    MathjaxComponent,
   ],
   templateUrl: './solution-calculator.component.html',
   styleUrl: './solution-calculator.component.scss',
 })
 export class SolutionCalculatorComponent {
   matrixCalculatorService = inject(MatrixCalculatorService);
+  loggerService = inject(LoggerService);
   readonly dialog = inject(MatDialog);
 
   dataSource: OptimalGameRound[] = [];
@@ -39,6 +43,10 @@ export class SolutionCalculatorComponent {
   steps: number = 0;
 
   hasResult: boolean = false;
+  loggerText: string = '';
+
+  mathContent = `When $ a \\ne 0 $, there are two solutions to \\(ax^2 + bx + c = 0 \\) and they are
+$$$ x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}$$$`;
 
   openDialog() {
     this.dialog.open(AlertDialogComponent);
@@ -52,6 +60,7 @@ export class SolutionCalculatorComponent {
     this.steps = 0;
 
     this.hasResult = false;
+    this.loggerText = '';
 
     this.matrixCalculatorService.resetMatrix();
   }
@@ -73,6 +82,7 @@ export class SolutionCalculatorComponent {
 
       this.dataSource = resultsData;
       this.hasResult = true;
+      this.loggerText = this.loggerService.getLogs();
     } else {
       this.openDialog();
     }

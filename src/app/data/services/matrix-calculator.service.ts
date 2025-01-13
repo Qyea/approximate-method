@@ -1,5 +1,8 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
+import { LoggerService } from './logger.service';
+
 import { OptimalGameRound } from '../interfaces/optimal-game-round';
+
 import { MatrixHelpers } from '../../helpers/matrix-helpers';
 
 @Injectable({
@@ -8,6 +11,8 @@ import { MatrixHelpers } from '../../helpers/matrix-helpers';
 export class MatrixCalculatorService {
   matrix = signal<number[][]>([]);
   matrixHelpers = new MatrixHelpers();
+
+  loggerService = inject(LoggerService);
 
   setMatrix(newMatrix: number[][]): void {
     this.matrix.set(newMatrix);
@@ -44,6 +49,8 @@ export class MatrixCalculatorService {
             Math.round(row.reduce((acc, val) => acc + val, 0) * 100) / 100
         );
 
+    this.loggerService.getDescription(normalizedMatrix, byRow);
+
     let optimalValue = byRow
       ? Math.min(...strategies)
       : Math.max(...strategies);
@@ -78,11 +85,18 @@ export class MatrixCalculatorService {
     const optimalRounds: OptimalGameRound[] = [];
 
     for (let i = 0; i < steps; i++) {
-      console.log(firstPlayerMixedStrategy);
       const minimumStrategy = this.findOptimalStrategy(
         this.matrix(),
         firstPlayerMixedStrategy,
         true
+      );
+
+      this.loggerService.logPlayerStep(
+        i,
+        firstPlayerMixedStrategy,
+        minimumStrategy.strategies,
+        minimumStrategy.optimalValue,
+        false
       );
 
       secondPlayerMixedStrategy[minimumStrategy.optimalIndex] += 1;
@@ -91,6 +105,14 @@ export class MatrixCalculatorService {
         this.matrix(),
         secondPlayerMixedStrategy,
         false
+      );
+
+      this.loggerService.logPlayerStep(
+        i,
+        secondPlayerMixedStrategy,
+        maximumStrategy.strategies,
+        maximumStrategy.optimalValue,
+        true
       );
 
       const roundResult: OptimalGameRound = {
