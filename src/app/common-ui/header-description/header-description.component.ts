@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
-
-import { TuiAccordion } from '@taiga-ui/kit';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -25,7 +17,6 @@ declare const MathJax: any;
     MatExpansionModule,
     MatIconModule,
     MatFormFieldModule,
-    TuiAccordion,
   ],
   templateUrl: './header-description.component.html',
   styleUrl: './header-description.component.scss',
@@ -34,26 +25,4 @@ declare const MathJax: any;
 export class HeaderDescriptionComponent {
   description: string = gameDescription;
   instruction: string = gameInstruction;
-
-  @ViewChild('accordion') accordion!: ElementRef;
-
-  onContentLoaded() {
-    setTimeout(() => MathJax.typesetPromise(), 0);
-  }
-
-  onAccordionChange() {
-    const isOpen = this.accordion.nativeElement.open;
-
-    console.log(isOpen);
-
-    if (isOpen) {
-      setTimeout(() => MathJax.typesetPromise(), 0);
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['description']) {
-      MathJax.typesetPromise();
-    }
-  }
 }
