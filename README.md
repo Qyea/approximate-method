@@ -1,27 +1,83 @@
-# ApproximateMethod
+# Iterative Method for Solving a Matrix Game
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.11.
 
-## Development server
+This project implements an **iterative method** to solve a matrix game using an interface built with Material-UI. A matrix game involves two players, typically referred to as *Player 1* and *Player 2*, where the objective is to find **optimal strategies** that minimize loss or maximize gain. The iterative approach is computationally efficient and provides a practical solution to finding the game's equilibrium.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Application Features
 
-## Code scaffolding
+1.  **Matrix Input Interface:**
+    
+    -   You can input the game matrix directly through a form. The interface includes a dynamic grid to accommodate matrices of varying dimensions.
+        
+2.  **Result Visualization:**
+    
+    -   Displays the final optimal strategies and the value of the game in an easy-to-read format.
+        
+    -   Includes visualizations, such as bar charts, to represent the probability distributions of mixed strategies.
+        
+3.  **Log output:**
+    
+    -   You can also see the output of all actions in the game if there is not enough information from the results table.
+ 
+## Workflow Overview
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### 1.  Input the Number of Pure Strategies
 
-## Build
+The user is provided with two input fields to specify the number of pure strategies for each player. Once both values are entered, a matrix of the corresponding size will appear for further input.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### 2. Input the Game Matrix
 
-## Running unit tests
+The user starts by defining the matrix for the game. For example, a 3x3 matrix can be entered as follows:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```
+| 2  3  4 |
+| 3  0  3 |
+| 4  2  0 |
+```
 
-## Running end-to-end tests
+The interface will provide a grid where users can fill in these values. The Material-UI grid and text field components ensure an intuitive experience.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+> [!IMPORTANT] 
+> The table accepts only positive strategy values.
 
-## Further help
+Only positive values should be entered in the matrix. This is based on the assumption that the values represent the payoff for Player 1. The payoff for Player 2 is the same values with the opposite sign (negative).
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+### 3. Enter the starting strategy of the first player and the number of iterations of the calculation
+
+> [!IMPORTANT] 
+> Indexing of strategies starts from 1.
+
+### 4. Iterative Computation
+
+Once the matrix is submitted, the iterative algorithm calculates the optimal strategies for both players. The algorithm involves:
+
+-   **Initialization:** Starting with initial probabilities for each strategy.
+    
+-   **Iteration:** Updating probabilities based on the best response calculations.
+    
+
+### 5. View Results
+
+The results are displayed on the screen:
+
+-  Sets of strategies.
+-  Optimal strategies for Player 1 and Player 2.
+-  The upper and lower value of the game.
+-   The value of the game (expected payoff).
+- Logs of each game round.
+    
+
+----------
+
+## Technologies Used
+
+-   **[Angular](https://angular.dev/overview) :** The core framework for the application.
+-   **[Material-UI](https://material.angular.io/) :** For creating the dynamic user interface.
+-   **Algorithm Implementation:** Written in [TypeScript](https://www.typescriptlang.org/) to integrate seamlessly with the front end.
+   
+    
+
+## Conclusion
+
+This application was created out of personal interest and a desire to gain a deeper understanding of game theory. The added logging functionality provides users with detailed insights into the algorithm's operation, making it easier to learn and analyze the iterative process. Whether you are a student, researcher, or enthusiast, this tool offers a practical way to explore and understand matrix games.
+        
